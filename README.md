@@ -15,8 +15,13 @@ A Leatrix Maps style world map addon for **OctoWoW**, which runs on the Turtle W
 
 ## Install
 
-1. Copy the `Inkmap` folder (the one containing `Inkmap.toc`) into `<OctoWoW folder>\Interface\AddOns\`.
-2. Restart the game and enable Inkmap on the AddOns screen at character select.
+**Launcher:** add the addon from its GitHub link, `https://github.com/Pourii83/Inkmap`.
+
+**Manual:**
+1. Download the repository as a ZIP and extract it.
+2. Rename the extracted folder to exactly `Inkmap`, so you have `Interface\AddOns\Inkmap\Inkmap.toc`.
+3. Move it into `<OctoWoW folder>\Interface\AddOns\`.
+4. Restart the game and enable Inkmap on the AddOns screen at character select.
 
 ## Commands
 
@@ -31,7 +36,7 @@ A Leatrix Maps style world map addon for **OctoWoW**, which runs on the Turtle W
 
 - Switching the windowed map off needs a `/reload`.
 - If Cartographer, MetaMap or pfUI's world map module is loaded, Inkmap leaves the map window and unexplored areas to that addon.
-- Level ranges for custom Turtle/OctoWoW zones can be added in `Inkmap/Data/ZoneLevels.lua`.
+- Level ranges for custom Turtle/OctoWoW zones can be added in `Data/ZoneLevels.lua`.
 
 ## Credits
 
@@ -43,7 +48,7 @@ The unexplored area data and the drawing approach come from [pfUI](https://githu
 
 Inkmap یک ادان نقشه شبیه Leatrix Maps برای سرور **OctoWoW** است. OctoWoW روی کلاینت Turtle WoW 1.17.2 اجرا می‌شود که پایه‌اش 1.12 است.
 
-**نصب:** پوشه‌ی `Inkmap` را در مسیر `Interface\AddOns` بازی کپی کنید و بازی را دوباره باز کنید.
+**نصب:** از لانچر با لینک گیت‌هاب نصب کنید، یا ZIP را دانلود کنید، اسم پوشه را دقیقاً `Inkmap` بگذارید و در `Interface\AddOns` بازی کپی کنید و بازی را دوباره باز کنید.
 
 **امکانات:**
 - نقشه به شکل پنجره درمی‌آید و می‌شود آن را جابه‌جا کرد. وقتی نقشه باز است هم می‌توانید حرکت کنید.

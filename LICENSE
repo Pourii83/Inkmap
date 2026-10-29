@@ -21,8 +21,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 ---------------------------------------------------------------------------
-Inkmap/Data/Overlays_Vanilla.lua, Inkmap/Data/Overlays_Turtle.lua and the
-overlay drawing in Inkmap/Modules/Reveal.lua are derived from pfUI:
+Data/Overlays_Vanilla.lua, Data/Overlays_Turtle.lua and the
+overlay drawing in Modules/Reveal.lua are derived from pfUI:
 
 The MIT License (MIT)
 
