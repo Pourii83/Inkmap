@@ -1,0 +1,57 @@
+# Inkmap
+
+A Leatrix Maps style world map addon for **OctoWoW**, which runs on the Turtle WoW 1.17.2 client (a 1.12 / vanilla client, Interface 11200).
+
+## Features
+
+- **Windowed map**: the world map is a movable window instead of fullscreen, so you can keep moving and fighting with it open. Turtle WoW's own minimize/maximize map mode is replaced.
+- **Scale and opacity**: Ctrl + mouse wheel scales the map. Shift + mouse wheel changes its opacity. The position is saved.
+- **Fade while moving**: the map turns transparent while you move and becomes solid again when the mouse is over it.
+- **Unexplored areas**: shows the parts of the map you have not explored yet, with an optional tint. This includes Turtle zones such as Gilneas, Hyjal, Tel'Abim and Thalassian Highlands.
+- **Coordinates**: shows player and cursor coordinates at the bottom of the map.
+- **Zone level ranges**: shows the level range next to a zone's name when you hover it, colored by difficulty for your level.
+- **Follow zone changes**: an open map switches to the new zone when you enter it.
+- **Minimap button**: left click toggles the map, right click opens the options, drag to move the button.
+
+## Install
+
+1. Copy the `Inkmap` folder (the one containing `Inkmap.toc`) into `<OctoWoW folder>\Interface\AddOns\`.
+2. Restart the game and enable Inkmap on the AddOns screen at character select.
+
+## Commands
+
+| Command | What it does |
+| --- | --- |
+| `/inkmap` or `/ink` | Open the options window |
+| `/inkmap reset` | Reset map position, scale and opacity |
+| `/inkmap lock` | Lock or unlock the map position |
+| `/inkmap data auto\|turtle\|vanilla` | Choose the unexplored area data set (default `auto` detects the client) |
+
+## Notes
+
+- Switching the windowed map off needs a `/reload`.
+- If Cartographer, MetaMap or pfUI's world map module is loaded, Inkmap leaves the map window and unexplored areas to that addon.
+- Level ranges for custom Turtle/OctoWoW zones can be added in `Inkmap/Data/ZoneLevels.lua`.
+
+## Credits
+
+The unexplored area data and the drawing approach come from [pfUI](https://github.com/shagu/pfUI) by Shagu (MIT License).
+
+---
+
+## راهنمای فارسی
+
+Inkmap یک ادان نقشه شبیه Leatrix Maps برای سرور **OctoWoW** است. OctoWoW روی کلاینت Turtle WoW 1.17.2 اجرا می‌شود که پایه‌اش 1.12 است.
+
+**نصب:** پوشه‌ی `Inkmap` را در مسیر `Interface\AddOns` بازی کپی کنید و بازی را دوباره باز کنید.
+
+**امکانات:**
+- نقشه به شکل پنجره درمی‌آید و می‌شود آن را جابه‌جا کرد. وقتی نقشه باز است هم می‌توانید حرکت کنید.
+- با Ctrl و چرخ موس اندازه‌ی نقشه عوض می‌شود. با Shift و چرخ موس شفافیتش عوض می‌شود.
+- وقتی حرکت می‌کنید نقشه کم‌رنگ می‌شود.
+- مناطقی که هنوز کشف نکرده‌اید روی نقشه نشان داده می‌شوند.
+- مختصات بازیکن و نشانگر موس پایین نقشه نمایش داده می‌شود.
+- وقتی موس را روی یک منطقه می‌برید، محدوده‌ی لول آن منطقه نشان داده می‌شود.
+- یک دکمه کنار مینی‌مپ هست.
+
+**تنظیمات:** دستور `/inkmap` را بزنید یا روی دکمه‌ی کنار مینی‌مپ راست‌کلیک کنید.

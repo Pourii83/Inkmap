@@ -1,0 +1,18 @@
+## Interface: 11200
+## Title: |cff33ccffInkmap|r
+## Notes: Leatrix Maps style world map for OctoWoW / Turtle WoW: windowed and movable map, unexplored areas, coordinates, zone levels.
+## Author: pourii83
+## Version: 1.0.0
+## SavedVariables: InkmapDB
+
+Data\Overlays_Vanilla.lua
+Data\Overlays_Turtle.lua
+Data\ZoneLevels.lua
+
+Core.lua
+Modules\Window.lua
+Modules\Reveal.lua
+Modules\Coords.lua
+Modules\ZoneLevels.lua
+Modules\MinimapButton.lua
+Modules\Options.lua

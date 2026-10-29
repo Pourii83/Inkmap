@@ -1,0 +1,51 @@
+-- Level ranges shown next to zone names on the world map (enUS zone names).
+-- Turtle WoW / OctoWoW custom zones can be added here as ["Zone Name"] = { min, max }.
+Inkmap_ZoneLevels = {
+  -- Eastern Kingdoms
+  ["Alterac Mountains"] = { 30, 40 },
+  ["Arathi Highlands"] = { 30, 40 },
+  ["Badlands"] = { 35, 45 },
+  ["Blasted Lands"] = { 45, 55 },
+  ["Burning Steppes"] = { 50, 58 },
+  ["Deadwind Pass"] = { 55, 60 },
+  ["Dun Morogh"] = { 1, 10 },
+  ["Duskwood"] = { 18, 30 },
+  ["Eastern Plaguelands"] = { 53, 60 },
+  ["Elwynn Forest"] = { 1, 10 },
+  ["Hillsbrad Foothills"] = { 20, 30 },
+  ["Loch Modan"] = { 10, 20 },
+  ["Redridge Mountains"] = { 15, 25 },
+  ["Searing Gorge"] = { 43, 50 },
+  ["Silverpine Forest"] = { 10, 20 },
+  ["Stranglethorn Vale"] = { 30, 45 },
+  ["Swamp of Sorrows"] = { 35, 45 },
+  ["The Hinterlands"] = { 40, 50 },
+  ["Tirisfal Glades"] = { 1, 10 },
+  ["Western Plaguelands"] = { 51, 58 },
+  ["Westfall"] = { 10, 20 },
+  ["Wetlands"] = { 20, 30 },
+
+  -- Kalimdor
+  ["Ashenvale"] = { 18, 30 },
+  ["Azshara"] = { 45, 55 },
+  ["Darkshore"] = { 10, 20 },
+  ["Desolace"] = { 30, 40 },
+  ["Durotar"] = { 1, 10 },
+  ["Dustwallow Marsh"] = { 35, 45 },
+  ["Felwood"] = { 48, 55 },
+  ["Feralas"] = { 40, 50 },
+  ["Mulgore"] = { 1, 10 },
+  ["Silithus"] = { 55, 60 },
+  ["Stonetalon Mountains"] = { 15, 27 },
+  ["Tanaris"] = { 40, 50 },
+  ["Teldrassil"] = { 1, 10 },
+  ["The Barrens"] = { 10, 25 },
+  ["Thousand Needles"] = { 25, 35 },
+  ["Un'Goro Crater"] = { 48, 55 },
+  ["Winterspring"] = { 55, 60 },
+
+  -- Battlegrounds
+  ["Warsong Gulch"] = { 10, 60 },
+  ["Arathi Basin"] = { 20, 60 },
+  ["Alterac Valley"] = { 51, 60 },
+}
