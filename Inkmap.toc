@@ -11,6 +11,7 @@ Data\ZoneLevels.lua
 
 Core.lua
 Modules\Window.lua
+Modules\Zoom.lua
 Modules\Reveal.lua
 Modules\Coords.lua
 Modules\ZoneLevels.lua

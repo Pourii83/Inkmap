@@ -18,6 +18,7 @@ Inkmap.defaults = {
   fade = true,
   fadeAlpha = 0.4,
   autoZone = true,
+  zoom = true,
   -- unexplored areas
   reveal = true,
   revealTint = true,
@@ -107,6 +108,7 @@ local function ShowHelp()
   DEFAULT_CHAT_FRAME:AddMessage("  /inkmap reset - reset map position, scale and opacity")
   DEFAULT_CHAT_FRAME:AddMessage("  /inkmap lock - lock or unlock the map position")
   DEFAULT_CHAT_FRAME:AddMessage("  /inkmap data auto|turtle|vanilla - unexplored area data set")
+  DEFAULT_CHAT_FRAME:AddMessage("  Mouse wheel on the map: zoom, drag: pan while zoomed")
   DEFAULT_CHAT_FRAME:AddMessage("  Ctrl + mouse wheel on the map: scale, Shift + mouse wheel: opacity")
 end
 

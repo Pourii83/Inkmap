@@ -70,6 +70,7 @@ function M:Reset()
   db.scale = Inkmap.defaults.scale
   db.alpha = Inkmap.defaults.alpha
   if self.enabled then self:Apply() end
+  Inkmap.zoom:Reset()
   Inkmap:Refresh()
 end
 
@@ -145,6 +146,8 @@ function M:Init()
       Inkmap.db.alpha = Inkmap:Clamp(Inkmap.db.alpha + arg1 * 0.05, 0.2, 1)
       M:UpdateAlpha()
       Inkmap:Refresh()
+    elseif Inkmap.zoom.enabled and Inkmap.db.zoom then
+      Inkmap.zoom:Step(arg1, true)
     end
   end)
 

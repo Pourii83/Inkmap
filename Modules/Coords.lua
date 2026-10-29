@@ -7,7 +7,8 @@ local UPDATE_INTERVAL = 0.05
 
 -- cursor position on the map in percent, or nil when not over the map
 local function GetCursorCoords()
-  if not MouseIsOver(WorldMapButton) then return end
+  local view = Inkmap.zoom.scroll or WorldMapButton
+  if not MouseIsOver(view) then return end
   local left, top = WorldMapButton:GetLeft(), WorldMapButton:GetTop()
   if not left then return end
   local scale = WorldMapButton:GetEffectiveScale()
@@ -41,8 +42,10 @@ end
 
 function M:Init()
   local frame = CreateFrame("Frame", "InkmapCoordsFrame", WorldMapFrame)
-  frame:SetAllPoints(WorldMapButton)
-  frame:SetFrameLevel(WorldMapButton:GetFrameLevel() + 5)
+  -- the zoom frame stays put while the map inside it zooms and scrolls
+  local view = Inkmap.zoom.scroll or WorldMapButton
+  frame:SetAllPoints(view)
+  frame:SetFrameLevel(view:GetFrameLevel() + 20)
   self.frame = frame
 
   self.player = frame:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
