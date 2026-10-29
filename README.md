@@ -5,8 +5,8 @@ A Leatrix Maps style world map addon for **OctoWoW**, which runs on the Turtle W
 ## Features
 
 - **Windowed map**: the world map is a movable window instead of fullscreen, so you can keep moving and fighting with it open. Turtle WoW's own minimize/maximize map mode is replaced.
-- **Zoom**: the mouse wheel over the map zooms in and out around the cursor (up to 4x), and the +/- buttons do the same. While zoomed in, drag with the left mouse button to pan. The zoom resets when the map shows another zone.
-- **Scale and opacity**: Ctrl + mouse wheel scales the map. Shift + mouse wheel changes its opacity. The position is saved.
+- **Zoom**: the mouse wheel over the map zooms in and out at the cursor (up to 4x). While zoomed in, drag with the left mouse button to pan. The zoom resets when the map shows another zone.
+- **Resize and opacity**: drag the grip in the bottom right corner to resize the map window (it keeps its shape). Ctrl + mouse wheel also resizes it. Shift + mouse wheel changes its opacity. The position is saved.
 - **Fade while moving**: the map turns transparent while you move and becomes solid again when the mouse is over it.
 - **Unexplored areas**: shows the parts of the map you have not explored yet, with an optional tint. This includes Turtle zones such as Gilneas, Hyjal, Tel'Abim and Thalassian Highlands.
 - **Coordinates**: shows player and cursor coordinates at the bottom of the map.
@@ -53,8 +53,8 @@ Inkmap یک ادان نقشه شبیه Leatrix Maps برای سرور **OctoWoW*
 
 **امکانات:**
 - نقشه به شکل پنجره درمی‌آید و می‌شود آن را جابه‌جا کرد. وقتی نقشه باز است هم می‌توانید حرکت کنید.
-- با چرخ موس یا دکمه‌های + و - روی نقشه زوم کنید. وقتی زوم کرده‌اید، با کشیدن موس نقشه را جابه‌جا کنید.
-- با Ctrl و چرخ موس اندازه‌ی نقشه عوض می‌شود. با Shift و چرخ موس شفافیتش عوض می‌شود.
+- با چرخ موس روی همان نقطه‌ای که موس هست زوم کنید. وقتی زوم کرده‌اید، با کشیدن موس نقشه را جابه‌جا کنید.
+- با کشیدن گوشه‌ی پایین راست پنجره، اندازه‌ی نقشه را تغییر دهید. Ctrl و چرخ موس هم اندازه را عوض می‌کند. با Shift و چرخ موس شفافیتش عوض می‌شود.
 - وقتی حرکت می‌کنید نقشه کم‌رنگ می‌شود.
 - مناطقی که هنوز کشف نکرده‌اید روی نقشه نشان داده می‌شوند.
 - مختصات بازیکن و نشانگر موس پایین نقشه نمایش داده می‌شود.

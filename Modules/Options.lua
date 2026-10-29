@@ -7,7 +7,7 @@ Inkmap.options = M
 local CHECKBOXES = {
   { key = "window", label = "Windowed, movable map", tip = "Needs a /reload to switch back to the fullscreen map." },
   { key = "locked", label = "Lock map position" },
-  { key = "zoom", label = "Map zoom", tip = "Mouse wheel or the +/- buttons zoom the map. Drag to pan while zoomed." },
+  { key = "zoom", label = "Map zoom", tip = "Mouse wheel zooms the map at the cursor. Drag to pan while zoomed." },
   { key = "fade", label = "Fade map while moving", tip = "The map turns solid again while the mouse is over it." },
   { key = "autoZone", label = "Follow zone changes", tip = "Switch the open map to the zone you just entered." },
   { key = "reveal", label = "Show unexplored areas" },

@@ -1,4 +1,4 @@
--- Turns the fullscreen world map into a movable, scalable window that
+-- Turns the fullscreen world map into a movable, resizable window that
 -- lets you keep playing while it is open, and fades it while moving.
 
 local Inkmap = Inkmap
@@ -62,6 +62,71 @@ function M:SetScale(scale)
   -- keep the map centered on the same spot while it grows or shrinks
   self:SavePosition()
   self:Apply()
+end
+
+-- Resizing keeps the map's aspect ratio by scaling the window, with its
+-- top left corner pinned while the grip follows the cursor.
+function M:StartResize()
+  local frame = WorldMapFrame
+  local scale = frame:GetEffectiveScale()
+  self.resizeLeft, self.resizeTop = frame:GetLeft() * scale, frame:GetTop() * scale
+  self.resizing = true
+end
+
+function M:UpdateResize()
+  if IsMouseButtonDown and not IsMouseButtonDown("LeftButton") then
+    self:StopResize()
+    return
+  end
+  local db, frame = Inkmap.db, WorldMapFrame
+  local x, y = GetCursorPosition()
+  local parentScale = frame:GetEffectiveScale() / frame:GetScale()
+  local scaleX = (x - self.resizeLeft) / (frame:GetWidth() * parentScale)
+  local scaleY = (self.resizeTop - y) / (frame:GetHeight() * parentScale)
+  db.scale = Inkmap:Clamp(math.min(scaleX, scaleY), 0.4, 1.5)
+
+  frame:SetScale(db.scale)
+  local scale = frame:GetEffectiveScale()
+  frame:ClearAllPoints()
+  frame:SetPoint("TOPLEFT", UIParent, "BOTTOMLEFT", self.resizeLeft / scale, self.resizeTop / scale)
+end
+
+function M:StopResize()
+  if not self.resizing then return end
+  self.resizing = false
+  self:SavePosition()
+  self:Apply()
+  Inkmap:Refresh()
+end
+
+function M:CreateResizeGrip()
+  local grip = CreateFrame("Button", "InkmapResizeGrip", WorldMapFrame)
+  grip:SetWidth(16)
+  grip:SetHeight(16)
+  grip:SetPoint("BOTTOMRIGHT", WorldMapFrame, "BOTTOMRIGHT", -4, 4)
+  grip:SetFrameLevel(WorldMapFrame:GetFrameLevel() + 40)
+  local texture = grip:CreateTexture(nil, "OVERLAY")
+  texture:SetTexture("Interface\\AddOns\\Inkmap\\Media\\ResizeGrip")
+  texture:SetAllPoints(grip)
+  texture:SetVertexColor(0.6, 0.6, 0.6, 1)
+
+  grip:SetScript("OnMouseDown", function()
+    if arg1 == "LeftButton" and not Inkmap.db.locked then M:StartResize() end
+  end)
+  grip:SetScript("OnMouseUp", function() M:StopResize() end)
+  grip:SetScript("OnUpdate", function()
+    if M.resizing then M:UpdateResize() end
+  end)
+  grip:SetScript("OnEnter", function()
+    texture:SetVertexColor(1, 1, 1, 1)
+    GameTooltip:SetOwner(this, "ANCHOR_RIGHT")
+    GameTooltip:SetText("Drag to resize the map")
+    GameTooltip:Show()
+  end)
+  grip:SetScript("OnLeave", function()
+    texture:SetVertexColor(0.6, 0.6, 0.6, 1)
+    GameTooltip:Hide()
+  end)
 end
 
 function M:Reset()
@@ -147,7 +212,7 @@ function M:Init()
       M:UpdateAlpha()
       Inkmap:Refresh()
     elseif Inkmap.zoom.enabled and Inkmap.db.zoom then
-      Inkmap.zoom:Step(arg1, true)
+      Inkmap.zoom:Step(arg1)
     end
   end)
 
@@ -175,5 +240,6 @@ function M:Init()
     end
   end)
 
+  self:CreateResizeGrip()
   self:Apply()
 end
