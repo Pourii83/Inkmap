@@ -155,6 +155,34 @@ function M:UpdatePlayerArrow()
   if ShowWorldMapArrowFrame then ShowWorldMapArrowFrame(inside and 1 or nil) end
 end
 
+-- Party and raid icons are children of the map, so they would grow with
+-- the zoom. Counter scale them to keep their size; that also shrinks
+-- their anchor offsets, so place them again at their map position.
+function M:UpdateUnitIcons()
+  local zoom = self:GetZoom()
+  if zoom == MIN_ZOOM and not self.iconsScaled then return end
+  self.iconsScaled = zoom ~= MIN_ZOOM
+
+  local detail = WorldMapDetailFrame
+  local width, height = detail:GetWidth() * zoom, detail:GetHeight() * zoom
+  local kinds = { Party = 4, Raid = 40 }
+  for kind, count in pairs(kinds) do
+    for i = 1, count do
+      local frame = getglobal("WorldMap" .. kind .. i)
+      if frame then
+        frame:SetScale(1 / zoom)
+        if frame:IsShown() and zoom ~= MIN_ZOOM then
+          local x, y = GetPlayerMapPosition(frame.unit or (string.lower(kind) .. i))
+          if x ~= 0 or y ~= 0 then
+            frame:ClearAllPoints()
+            frame:SetPoint("CENTER", detail, "TOPLEFT", x * width, -y * height)
+          end
+        end
+      end
+    end
+  end
+end
+
 -- left drag pans the zoomed map; a drag must not count as a click
 function M:HookPanning()
   Inkmap:HookScript(WorldMapButton, "OnMouseDown", function()
@@ -219,7 +247,10 @@ function M:Init()
   scroll:SetScrollChild(detail)
 
   self:HookPanning()
-  Inkmap:HookScript(WorldMapButton, "OnUpdate", function() M:UpdatePlayerArrow() end)
+  Inkmap:HookScript(WorldMapButton, "OnUpdate", function()
+    M:UpdatePlayerArrow()
+    M:UpdateUnitIcons()
+  end)
 
   -- start unzoomed whenever the map shows a different zone
   local original = WorldMapFrame_Update
