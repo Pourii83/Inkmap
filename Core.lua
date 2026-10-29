@@ -27,6 +27,7 @@ Inkmap.defaults = {
   -- extras
   coords = true,
   zoneLevels = true,
+  classIcons = true,
   minimap = true,
   minimapAngle = 200,
 }

@@ -14,6 +14,7 @@ local CHECKBOXES = {
   { key = "revealTint", label = "Tint unexplored areas" },
   { key = "coords", label = "Show coordinates" },
   { key = "zoneLevels", label = "Show zone level ranges" },
+  { key = "classIcons", label = "Class colored group icons", tip = "Party and raid members show as circles in their class color." },
   { key = "minimap", label = "Show minimap button" },
 }
 

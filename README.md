@@ -11,6 +11,7 @@ A Leatrix Maps style world map addon for **OctoWoW**, which runs on the Turtle W
 - **Unexplored areas**: shows the parts of the map you have not explored yet, with an optional tint. This includes Turtle zones such as Gilneas, Hyjal, Tel'Abim and Thalassian Highlands.
 - **Coordinates**: shows player and cursor coordinates at the bottom of the map.
 - **Zone level ranges**: shows the level range next to a zone's name when you hover it, colored by difficulty for your level.
+- **Class colored group icons**: party and raid members show on the world map and the battlefield minimap as small circles in their class color.
 - **Follow zone changes**: an open map switches to the new zone when you enter it.
 - **Minimap button**: left click toggles the map, right click opens the options, drag to move the button.
 
@@ -59,6 +60,7 @@ Inkmap یک ادان نقشه شبیه Leatrix Maps برای سرور **OctoWoW*
 - مناطقی که هنوز کشف نکرده‌اید روی نقشه نشان داده می‌شوند.
 - مختصات بازیکن و نشانگر موس پایین نقشه نمایش داده می‌شود.
 - وقتی موس را روی یک منطقه می‌برید، محدوده‌ی لول آن منطقه نشان داده می‌شود.
+- هم‌گروهی‌های پارتی و رید روی نقشه به شکل دایره‌ی کوچک با رنگ کلاسشان نمایش داده می‌شوند.
 - یک دکمه کنار مینی‌مپ هست.
 
 **تنظیمات:** دستور `/inkmap` را بزنید یا روی دکمه‌ی کنار مینی‌مپ راست‌کلیک کنید.

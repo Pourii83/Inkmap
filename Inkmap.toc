@@ -15,5 +15,6 @@ Modules\Zoom.lua
 Modules\Reveal.lua
 Modules\Coords.lua
 Modules\ZoneLevels.lua
+Modules\ClassIcons.lua
 Modules\MinimapButton.lua
 Modules\Options.lua
