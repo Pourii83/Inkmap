@@ -10,7 +10,7 @@ local UPDATE_INTERVAL = 0.1
 -- window layout around the 1002x668 map
 local MAP_WIDTH, MAP_HEIGHT = 1002, 668
 -- PAD is the grabbable band between the silver border and the map
-local PAD, HEADER, FOOTER = 12, 30, 20
+local PAD, HEADER, FOOTER = 12, 30, 28
 local EDGE, EDGE_OFFSET = 24, 2
 M.footerHeight, M.cornerSize = FOOTER, EDGE + 4
 

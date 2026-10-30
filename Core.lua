@@ -18,7 +18,7 @@ Inkmap.defaults = {
   fade = true,
   fadeAlpha = 0.4,
   fadeAway = true,
-  awayAlpha = 0.75,
+  awayAlpha = 0.5,
   autoZone = true,
   hideControls = true,
   zoom = true,
@@ -92,6 +92,9 @@ loader:RegisterEvent("PLAYER_ENTERING_WORLD")
 loader:SetScript("OnEvent", function()
   if event == "ADDON_LOADED" and arg1 == "Inkmap" then
     InkmapDB = InkmapDB or {}
+    -- 1.0 saved the old default; move it to the new one unless it was changed
+    if not InkmapDB.dbVersion and InkmapDB.awayAlpha == 0.75 then InkmapDB.awayAlpha = 0.5 end
+    InkmapDB.dbVersion = 2
     CopyDefaults(Inkmap.defaults, InkmapDB)
     Inkmap.db = InkmapDB
   elseif event == "PLAYER_ENTERING_WORLD" and not Inkmap.initialized then

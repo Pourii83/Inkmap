@@ -55,8 +55,9 @@ function M:Init()
     frame:SetPoint("BOTTOMLEFT", WorldMapFrame, "BOTTOMLEFT", 0, 0)
     frame:SetPoint("BOTTOMRIGHT", WorldMapFrame, "BOTTOMRIGHT", 0, 0)
     frame:SetHeight(window.footerHeight)
-    self.cursor:SetPoint("LEFT", frame, "LEFT", inset, 0)
-    self.player:SetPoint("RIGHT", frame, "RIGHT", -inset, 0)
+    -- centered in the part of the footer above the bottom border
+    self.cursor:SetPoint("LEFT", frame, "LEFT", inset, 3)
+    self.player:SetPoint("RIGHT", frame, "RIGHT", -inset, 3)
   else
     frame:SetAllPoints(WorldMapButton)
     self.cursor:SetPoint("BOTTOMLEFT", frame, "BOTTOMLEFT", 10, 8)
