@@ -7,6 +7,7 @@ Inkmap.options = M
 local CHECKBOXES = {
   { key = "window", label = "Windowed, movable map", tip = "Needs a /reload to switch back to the fullscreen map." },
   { key = "locked", label = "Lock map position" },
+  { key = "hideControls", label = "Hide map buttons and dropdowns", tip = "Right click the map to zoom out, ESC or the map key to close it. Needs a /reload to bring them back." },
   { key = "zoom", label = "Map zoom", tip = "Mouse wheel zooms the map at the cursor. Drag to pan while zoomed." },
   { key = "fade", label = "Fade map while moving", tip = "The map turns solid again while the mouse is over it." },
   { key = "autoZone", label = "Follow zone changes", tip = "Switch the open map to the zone you just entered." },
@@ -36,8 +37,8 @@ local function CreateCheckbox(parent, index, info)
   check:SetScript("OnClick", function()
     local key = this.info.key
     Inkmap.db[key] = this:GetChecked() and true or false
-    if key == "window" then
-      Inkmap:Print("type /reload to apply the map window setting.")
+    if key == "window" or key == "hideControls" then
+      Inkmap:Print("type /reload to apply this setting.")
     end
     Inkmap:Refresh()
   end)

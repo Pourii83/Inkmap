@@ -18,6 +18,7 @@ Inkmap.defaults = {
   fade = true,
   fadeAlpha = 0.4,
   autoZone = true,
+  hideControls = true,
   zoom = true,
   -- unexplored areas
   reveal = true,

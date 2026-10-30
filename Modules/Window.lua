@@ -23,6 +23,17 @@ local CORNERS = {
   { point = "BOTTOMRIGHT", x = 3, y = -3, left = 7 / 8 },
 }
 
+-- dropdowns made from UIDropDownMenuTemplate have these child regions
+local function IsDropDown(frame)
+  local name = frame:GetName()
+  return name and getglobal(name .. "Button") and getglobal(name .. "Text") and true
+end
+
+local function Suppress(frame)
+  frame:Hide()
+  frame.Show = function() end
+end
+
 -- removes the fullscreen parchment art and the "World Map" title
 local function StripRegions(frame)
   for _, region in ipairs({ frame:GetRegions() }) do
@@ -65,7 +76,7 @@ function M:Apply()
 
   frame:SetScale(db.scale)
   frame:SetWidth(MAP_WIDTH + PAD * 2)
-  frame:SetHeight(HEADER + MAP_HEIGHT + FOOTER)
+  frame:SetHeight(self:GetHeader() + MAP_HEIGHT + FOOTER)
   frame:ClearAllPoints()
   if db.x and db.y then
     local scale = frame:GetEffectiveScale()
@@ -180,12 +191,33 @@ function M:Style()
   end
 end
 
+-- Hides the map's buttons and dropdowns, including ones other addons put
+-- on the map (pfQuest's quest filter for example). Right click still
+-- zooms the map out, and ESC or the map key close it.
+function M:HideControls()
+  if not Inkmap.db.hideControls then return end
+  local fixed = { WorldMapContinentDropDown, WorldMapZoneDropDown, WorldMapZoneMinimapDropDown,
+    WorldMapZoomOutButton, WorldMapFrameCloseButton }
+  for _, frame in pairs(fixed) do Suppress(frame) end
+
+  for _, parent in ipairs({ WorldMapFrame, WorldMapButton }) do
+    for _, child in ipairs({ parent:GetChildren() }) do
+      if IsDropDown(child) then Suppress(child) end
+    end
+  end
+end
+
+function M:GetHeader()
+  if Inkmap.db.hideControls then return PAD end
+  return HEADER
+end
+
 -- places the map between the header (dropdowns) and the footer (coordinates)
 function M:Layout()
   local frame = WorldMapFrame
   local map = Inkmap.zoom.scroll or WorldMapDetailFrame
   map:ClearAllPoints()
-  map:SetPoint("TOPLEFT", frame, "TOPLEFT", PAD, -HEADER)
+  map:SetPoint("TOPLEFT", frame, "TOPLEFT", PAD, -self:GetHeader())
 
   -- 1.12 anchors the map and its extras to this guide; keep the guide
   -- where it was relative to the map (map top left = guide top - 502, -69)
@@ -260,6 +292,7 @@ function M:Init()
 
   self:Style()
   self:Layout()
+  self:HideControls()
 
   frame:SetMovable(true)
   frame:SetClampedToScreen(true)
@@ -292,6 +325,8 @@ function M:Init()
   -- the default OnShow resets scale and grabs the keyboard; undo that
   Inkmap:HookScript(frame, "OnShow", function()
     WorldMapFrame:EnableKeyboard(false)
+    -- catches dropdowns that addons created after login
+    M:HideControls()
     M.lastX, M.moving = nil, false
     M:Apply()
   end)
