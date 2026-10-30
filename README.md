@@ -4,10 +4,10 @@ A Leatrix Maps style world map addon for **OctoWoW**, which runs on the Turtle W
 
 ## Features
 
-- **Windowed map**: the world map is a movable window instead of fullscreen, so you can keep moving and fighting with it open. It has a clean dark frame with silver corners and the coordinates in a strip below the map. The map's buttons and dropdowns (including ones other addons add, such as pfQuest's quest filter) are hidden: left click a zone to open it, right click to zoom out, and press ESC or the map key to close. This can be turned off in the options. Turtle WoW's own minimize/maximize map mode is replaced.
+- **Windowed map**: the world map is a movable window instead of fullscreen, so you can keep moving and fighting with it open. It has a dark frame with a silver border; grab the border to move the window and the coordinates in a strip below the map. The map's buttons and dropdowns (including ones other addons add, such as pfQuest's quest filter) are hidden: left click a zone to open it, right click to zoom out, and press ESC or the map key to close. This can be turned off in the options. Turtle WoW's own minimize/maximize map mode is replaced.
 - **Zoom**: the mouse wheel over the map zooms in and out at the cursor (up to 4x). While zoomed in, drag with the left mouse button to pan. The zoom resets when the map shows another zone.
 - **Resize and opacity**: drag the silver bottom right corner to resize the map window (it keeps its shape). Ctrl + mouse wheel also resizes it. Shift + mouse wheel changes its opacity. The position is saved.
-- **Fade while moving**: the map turns transparent while you move and becomes solid again when the mouse is over it.
+- **Fade**: the map turns a bit transparent when the mouse leaves it, and more transparent while you move. It becomes solid again when the mouse is over it.
 - **Unexplored areas**: shows the parts of the map you have not explored yet, with an optional tint. This includes Turtle zones such as Gilneas, Hyjal, Tel'Abim and Thalassian Highlands.
 - **Coordinates**: cursor coordinates on the left and player coordinates on the right, in the strip below the map.
 - **Zone level ranges**: shows the level range next to a zone's name when you hover it, colored by difficulty for your level.
@@ -55,9 +55,9 @@ Inkmap یک ادان نقشه شبیه Leatrix Maps برای سرور **OctoWoW*
 **امکانات:**
 - نقشه به شکل پنجره درمی‌آید و می‌شود آن را جابه‌جا کرد. وقتی نقشه باز است هم می‌توانید حرکت کنید.
 - با چرخ موس روی همان نقطه‌ای که موس هست زوم کنید. وقتی زوم کرده‌اید، با کشیدن موس نقشه را جابه‌جا کنید.
-- قاب نقشه تیره و ساده است، با گوشه‌های نقره‌ای. مختصات در نوار پایین نقشه است. دکمه‌ها و منوهای روی نقشه مخفی هستند: برای رفتن به یک منطقه روی آن کلیک چپ کنید، برای برگشت کلیک راست کنید، و با ESC یا کلید M نقشه را ببندید.
+- قاب نقشه تیره است با حاشیه‌ی نقره‌ای؛ برای جابه‌جا کردن پنجره حاشیه را بگیرید و بکشید. مختصات در نوار پایین نقشه است. دکمه‌ها و منوهای روی نقشه مخفی هستند: برای رفتن به یک منطقه روی آن کلیک چپ کنید، برای برگشت کلیک راست کنید، و با ESC یا کلید M نقشه را ببندید.
 - با کشیدن گوشه‌ی نقره‌ای پایین راست پنجره، اندازه‌ی نقشه را تغییر دهید. Ctrl و چرخ موس هم اندازه را عوض می‌کند. با Shift و چرخ موس شفافیتش عوض می‌شود.
-- وقتی حرکت می‌کنید نقشه کم‌رنگ می‌شود.
+- وقتی موس از روی نقشه کنار برود نقشه کمی شفاف می‌شود، و موقع حرکت شفاف‌تر.
 - مناطقی که هنوز کشف نکرده‌اید روی نقشه نشان داده می‌شوند.
 - مختصات نشانگر موس سمت چپ و مختصات بازیکن سمت راست نوار پایین نقشه نمایش داده می‌شود.
 - وقتی موس را روی یک منطقه می‌برید، محدوده‌ی لول آن منطقه نشان داده می‌شود.

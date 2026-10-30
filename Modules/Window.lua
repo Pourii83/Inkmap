@@ -9,19 +9,14 @@ local UPDATE_INTERVAL = 0.1
 
 -- window layout around the 1002x668 map
 local MAP_WIDTH, MAP_HEIGHT = 1002, 668
-local PAD, HEADER, FOOTER = 4, 30, 20
-local CORNER = 36
-M.footerHeight, M.cornerSize = FOOTER, CORNER
+-- PAD is the grabbable band between the silver border and the map
+local PAD, HEADER, FOOTER = 12, 30, 20
+local EDGE, EDGE_OFFSET = 24, 2
+M.footerHeight, M.cornerSize = FOOTER, EDGE + 4
 
 local WHITE = "Interface\\Buttons\\WHITE8X8"
 local DIALOG_BORDER = "Interface\\DialogFrame\\UI-DialogBox-Border"
--- a backdrop edge file holds 8 pieces side by side; the last 4 are corners
-local CORNERS = {
-  { point = "TOPLEFT", x = -3, y = 3, left = 4 / 8 },
-  { point = "TOPRIGHT", x = 3, y = 3, left = 5 / 8 },
-  { point = "BOTTOMLEFT", x = -3, y = -3, left = 6 / 8 },
-  { point = "BOTTOMRIGHT", x = 3, y = -3, left = 7 / 8 },
-}
+local BORDER_COLOR, BORDER_HOVER = 0.8, 1
 
 -- dropdowns made from UIDropDownMenuTemplate have these child regions
 local function IsDropDown(frame)
@@ -131,8 +126,22 @@ function M:StopResize()
   Inkmap:Refresh()
 end
 
--- the bottom right corner ornament doubles as the resize handle
-function M:MakeResizeHandle(corner, texture)
+-- the bottom right corner ornament doubles as the resize handle: a copy
+-- of that corner piece drawn over the border, which lights up on hover
+function M:CreateResizeHandle(border)
+  local corner = CreateFrame("Frame", nil, border)
+  corner:SetWidth(EDGE)
+  corner:SetHeight(EDGE)
+  corner:SetPoint("BOTTOMRIGHT", border, "BOTTOMRIGHT", 0, 0)
+  corner:SetFrameLevel(border:GetFrameLevel() + 1)
+  local texture = corner:CreateTexture(nil, "OVERLAY")
+  texture:SetTexture(DIALOG_BORDER)
+  -- an edge file holds 8 pieces side by side; the last is the bottom right corner
+  texture:SetTexCoord(7 / 8, 1, 0, 1)
+  texture:SetAllPoints(corner)
+  texture:SetVertexColor(BORDER_COLOR, BORDER_COLOR, BORDER_COLOR, 1)
+  self.resizeHandle = corner
+
   corner:EnableMouse(true)
   corner:SetScript("OnMouseDown", function()
     if arg1 == "LeftButton" and not Inkmap.db.locked then M:StartResize() end
@@ -142,18 +151,18 @@ function M:MakeResizeHandle(corner, texture)
     if M.resizing then M:UpdateResize() end
   end)
   corner:SetScript("OnEnter", function()
-    texture:SetVertexColor(1, 1, 1, 1)
+    texture:SetVertexColor(BORDER_HOVER, BORDER_HOVER, BORDER_HOVER, 1)
     GameTooltip:SetOwner(this, "ANCHOR_RIGHT")
     GameTooltip:SetText("Drag to resize the map")
     GameTooltip:Show()
   end)
   corner:SetScript("OnLeave", function()
-    texture:SetVertexColor(0.8, 0.8, 0.8, 1)
+    texture:SetVertexColor(BORDER_COLOR, BORDER_COLOR, BORDER_COLOR, 1)
     GameTooltip:Hide()
   end)
 end
 
--- thin dark frame with silver corner ornaments, like the modern map
+-- dark frame with a silver border, like the modern map
 function M:Style()
   local frame = WorldMapFrame
   StripRegions(frame)
@@ -173,22 +182,16 @@ function M:Style()
   line:SetBackdropBorderColor(0, 0, 0, 1)
   self.mapLine = line
 
-  for _, info in ipairs(CORNERS) do
-    local corner = CreateFrame("Frame", nil, frame)
-    corner:SetWidth(CORNER)
-    corner:SetHeight(CORNER)
-    corner:SetPoint(info.point, frame, info.point, info.x, info.y)
-    corner:SetFrameLevel(frame:GetFrameLevel() + 60)
-    local texture = corner:CreateTexture(nil, "OVERLAY")
-    texture:SetTexture(DIALOG_BORDER)
-    texture:SetTexCoord(info.left, info.left + 1 / 8, 0, 1)
-    texture:SetAllPoints(corner)
-    texture:SetVertexColor(0.8, 0.8, 0.8, 1)
-    if info.point == "BOTTOMRIGHT" then
-      self.resizeHandle = corner
-      self:MakeResizeHandle(corner, texture)
-    end
-  end
+  -- silver edge all around, drawn over the map so the corners overlap it;
+  -- not mouse enabled, so the window under it still takes the drag
+  local border = CreateFrame("Frame", nil, frame)
+  border:SetPoint("TOPLEFT", frame, "TOPLEFT", -EDGE_OFFSET, EDGE_OFFSET)
+  border:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", EDGE_OFFSET, -EDGE_OFFSET)
+  border:SetFrameLevel(frame:GetFrameLevel() + 60)
+  border:SetBackdrop({ edgeFile = DIALOG_BORDER, edgeSize = EDGE })
+  border:SetBackdropBorderColor(BORDER_COLOR, BORDER_COLOR, BORDER_COLOR, 1)
+
+  self:CreateResizeHandle(border)
 end
 
 -- Hides the map's buttons and dropdowns, including ones other addons put
@@ -255,11 +258,27 @@ function M:Reset()
   Inkmap:Refresh()
 end
 
-function M:UpdateAlpha()
+local FADE_STEP = 0.15
+
+-- the map turns a bit transparent while the mouse is away from it, and
+-- more so while moving; 'smooth' eases toward the target instead of jumping
+function M:UpdateAlpha(smooth)
   local db, frame = Inkmap.db, WorldMapFrame
-  local alpha = db.alpha
-  if db.fade and self.moving and not MouseIsOver(frame) then
-    alpha = math.min(alpha, db.fadeAlpha)
+  local target = db.alpha
+  if not MouseIsOver(frame) then
+    if db.fadeAway then target = math.min(target, db.awayAlpha) end
+    if db.fade and self.moving then target = math.min(target, db.fadeAlpha) end
+  end
+
+  local alpha = frame:GetAlpha()
+  if smooth then
+    if alpha < target then
+      alpha = math.min(alpha + FADE_STEP, target)
+    else
+      alpha = math.max(alpha - FADE_STEP, target)
+    end
+  else
+    alpha = target
   end
   if frame:GetAlpha() ~= alpha then frame:SetAlpha(alpha) end
 end
@@ -339,7 +358,7 @@ function M:Init()
     if this.elapsed < UPDATE_INTERVAL then return end
     this.elapsed = 0
     M:UpdateMoving()
-    M:UpdateAlpha()
+    M:UpdateAlpha(true)
   end)
   driver:RegisterEvent("ZONE_CHANGED_NEW_AREA")
   driver:SetScript("OnEvent", function()

@@ -9,6 +9,7 @@ local CHECKBOXES = {
   { key = "locked", label = "Lock map position" },
   { key = "hideControls", label = "Hide map buttons and dropdowns", tip = "Right click the map to zoom out, ESC or the map key to close it. Needs a /reload to bring them back." },
   { key = "zoom", label = "Map zoom", tip = "Mouse wheel zooms the map at the cursor. Drag to pan while zoomed." },
+  { key = "fadeAway", label = "Fade map when the mouse leaves it" },
   { key = "fade", label = "Fade map while moving", tip = "The map turns solid again while the mouse is over it." },
   { key = "autoZone", label = "Follow zone changes", tip = "Switch the open map to the zone you just entered." },
   { key = "reveal", label = "Show unexplored areas" },
@@ -22,6 +23,7 @@ local CHECKBOXES = {
 local SLIDERS = {
   { key = "scale", label = "Map scale", min = 0.4, max = 1.5, step = 0.05 },
   { key = "alpha", label = "Map opacity", min = 0.2, max = 1, step = 0.05 },
+  { key = "awayAlpha", label = "Opacity with mouse away", min = 0.1, max = 1, step = 0.05 },
   { key = "fadeAlpha", label = "Opacity while moving", min = 0.1, max = 1, step = 0.05 },
 }
 
