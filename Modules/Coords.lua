@@ -1,9 +1,11 @@
--- Player and cursor coordinates at the bottom of the world map.
+-- Player and cursor coordinates: in the strip below the map in window
+-- mode, on top of the map itself in fullscreen mode.
 
 local Inkmap = Inkmap
 local M = Inkmap:RegisterModule("coords", {})
 
 local UPDATE_INTERVAL = 0.05
+local LABEL = "|cffffd100%s|r %.1f, %.1f"
 
 -- cursor position on the map in percent, or nil when not over the map
 local function GetCursorCoords()
@@ -22,14 +24,14 @@ end
 function M:Update()
   local x, y = GetPlayerMapPosition("player")
   if x == 0 and y == 0 then
-    self.player:SetText("Player: --")
+    self.player:SetText("")
   else
-    self.player:SetText(string.format("Player: %.1f, %.1f", x * 100, y * 100))
+    self.player:SetText(string.format(LABEL, "Player:", x * 100, y * 100))
   end
 
   local cx, cy = GetCursorCoords()
   if cx then
-    self.cursor:SetText(string.format("Cursor: %.1f, %.1f", cx, cy))
+    self.cursor:SetText(string.format(LABEL, "Cursor:", cx, cy))
   else
     self.cursor:SetText("")
   end
@@ -41,17 +43,26 @@ function M:Refresh()
 end
 
 function M:Init()
+  local window = Inkmap.window
   local frame = CreateFrame("Frame", "InkmapCoordsFrame", WorldMapFrame)
-  -- the zoom frame stays put while the map inside it zooms and scrolls
-  local view = Inkmap.zoom.scroll or WorldMapButton
-  frame:SetAllPoints(view)
-  frame:SetFrameLevel(view:GetFrameLevel() + 20)
   self.frame = frame
+  self.cursor = frame:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
+  self.player = frame:CreateFontString(nil, "OVERLAY", "GameFontHighlightSmall")
 
-  self.player = frame:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
-  self.player:SetPoint("BOTTOMLEFT", frame, "BOTTOMLEFT", 10, 8)
-  self.cursor = frame:CreateFontString(nil, "OVERLAY", "GameFontHighlight")
-  self.cursor:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -10, 8)
+  if window.enabled then
+    -- footer strip, clear of the corner ornaments
+    local inset = window.cornerSize - 2
+    frame:SetPoint("BOTTOMLEFT", WorldMapFrame, "BOTTOMLEFT", 0, 0)
+    frame:SetPoint("BOTTOMRIGHT", WorldMapFrame, "BOTTOMRIGHT", 0, 0)
+    frame:SetHeight(window.footerHeight)
+    self.cursor:SetPoint("LEFT", frame, "LEFT", inset, 0)
+    self.player:SetPoint("RIGHT", frame, "RIGHT", -inset, 0)
+  else
+    frame:SetAllPoints(WorldMapButton)
+    self.cursor:SetPoint("BOTTOMLEFT", frame, "BOTTOMLEFT", 10, 8)
+    self.player:SetPoint("BOTTOMRIGHT", frame, "BOTTOMRIGHT", -10, 8)
+  end
+  frame:SetFrameLevel(WorldMapFrame:GetFrameLevel() + 50)
 
   frame.elapsed = 0
   frame:SetScript("OnUpdate", function()

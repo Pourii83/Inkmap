@@ -7,9 +7,30 @@ Inkmap.window = M
 
 local UPDATE_INTERVAL = 0.1
 
-local function StripTextures(frame)
+-- window layout around the 1002x668 map
+local MAP_WIDTH, MAP_HEIGHT = 1002, 668
+local PAD, HEADER, FOOTER = 4, 30, 20
+local CORNER = 36
+M.footerHeight, M.cornerSize = FOOTER, CORNER
+
+local WHITE = "Interface\\Buttons\\WHITE8X8"
+local DIALOG_BORDER = "Interface\\DialogFrame\\UI-DialogBox-Border"
+-- a backdrop edge file holds 8 pieces side by side; the last 4 are corners
+local CORNERS = {
+  { point = "TOPLEFT", x = -3, y = 3, left = 4 / 8 },
+  { point = "TOPRIGHT", x = 3, y = 3, left = 5 / 8 },
+  { point = "BOTTOMLEFT", x = -3, y = -3, left = 6 / 8 },
+  { point = "BOTTOMRIGHT", x = 3, y = -3, left = 7 / 8 },
+}
+
+-- removes the fullscreen parchment art and the "World Map" title
+local function StripRegions(frame)
   for _, region in ipairs({ frame:GetRegions() }) do
-    if region.SetTexture then region:SetTexture(nil) end
+    if region.SetTexture then
+      region:SetTexture(nil)
+    elseif region.SetText then
+      region:Hide()
+    end
   end
 end
 
@@ -43,8 +64,8 @@ function M:Apply()
   local db, frame = Inkmap.db, WorldMapFrame
 
   frame:SetScale(db.scale)
-  frame:SetWidth(WorldMapButton:GetWidth() + 15)
-  frame:SetHeight(WorldMapButton:GetHeight() + 55)
+  frame:SetWidth(MAP_WIDTH + PAD * 2)
+  frame:SetHeight(HEADER + MAP_HEIGHT + FOOTER)
   frame:ClearAllPoints()
   if db.x and db.y then
     local scale = frame:GetEffectiveScale()
@@ -99,34 +120,97 @@ function M:StopResize()
   Inkmap:Refresh()
 end
 
-function M:CreateResizeGrip()
-  local grip = CreateFrame("Button", "InkmapResizeGrip", WorldMapFrame)
-  grip:SetWidth(16)
-  grip:SetHeight(16)
-  grip:SetPoint("BOTTOMRIGHT", WorldMapFrame, "BOTTOMRIGHT", -4, 4)
-  grip:SetFrameLevel(WorldMapFrame:GetFrameLevel() + 40)
-  local texture = grip:CreateTexture(nil, "OVERLAY")
-  texture:SetTexture("Interface\\AddOns\\Inkmap\\Media\\ResizeGrip")
-  texture:SetAllPoints(grip)
-  texture:SetVertexColor(0.6, 0.6, 0.6, 1)
-
-  grip:SetScript("OnMouseDown", function()
+-- the bottom right corner ornament doubles as the resize handle
+function M:MakeResizeHandle(corner, texture)
+  corner:EnableMouse(true)
+  corner:SetScript("OnMouseDown", function()
     if arg1 == "LeftButton" and not Inkmap.db.locked then M:StartResize() end
   end)
-  grip:SetScript("OnMouseUp", function() M:StopResize() end)
-  grip:SetScript("OnUpdate", function()
+  corner:SetScript("OnMouseUp", function() M:StopResize() end)
+  corner:SetScript("OnUpdate", function()
     if M.resizing then M:UpdateResize() end
   end)
-  grip:SetScript("OnEnter", function()
+  corner:SetScript("OnEnter", function()
     texture:SetVertexColor(1, 1, 1, 1)
     GameTooltip:SetOwner(this, "ANCHOR_RIGHT")
     GameTooltip:SetText("Drag to resize the map")
     GameTooltip:Show()
   end)
-  grip:SetScript("OnLeave", function()
-    texture:SetVertexColor(0.6, 0.6, 0.6, 1)
+  corner:SetScript("OnLeave", function()
+    texture:SetVertexColor(0.8, 0.8, 0.8, 1)
     GameTooltip:Hide()
   end)
+end
+
+-- thin dark frame with silver corner ornaments, like the modern map
+function M:Style()
+  local frame = WorldMapFrame
+  StripRegions(frame)
+  if BlackoutWorld then BlackoutWorld:Hide() end
+  if WorldMapMagnifyingGlassButton then WorldMapMagnifyingGlassButton:Hide() end
+
+  frame:SetBackdrop({
+    bgFile = WHITE, edgeFile = WHITE, tile = false, edgeSize = 1,
+    insets = { left = 1, right = 1, top = 1, bottom = 1 },
+  })
+  frame:SetBackdropColor(0.06, 0.06, 0.06, 0.95)
+  frame:SetBackdropBorderColor(0.3, 0.3, 0.3, 1)
+
+  -- dark line around the map itself
+  local line = CreateFrame("Frame", nil, frame)
+  line:SetBackdrop({ edgeFile = WHITE, edgeSize = 1 })
+  line:SetBackdropBorderColor(0, 0, 0, 1)
+  self.mapLine = line
+
+  for _, info in ipairs(CORNERS) do
+    local corner = CreateFrame("Frame", nil, frame)
+    corner:SetWidth(CORNER)
+    corner:SetHeight(CORNER)
+    corner:SetPoint(info.point, frame, info.point, info.x, info.y)
+    corner:SetFrameLevel(frame:GetFrameLevel() + 60)
+    local texture = corner:CreateTexture(nil, "OVERLAY")
+    texture:SetTexture(DIALOG_BORDER)
+    texture:SetTexCoord(info.left, info.left + 1 / 8, 0, 1)
+    texture:SetAllPoints(corner)
+    texture:SetVertexColor(0.8, 0.8, 0.8, 1)
+    if info.point == "BOTTOMRIGHT" then
+      self.resizeHandle = corner
+      self:MakeResizeHandle(corner, texture)
+    end
+  end
+end
+
+-- places the map between the header (dropdowns) and the footer (coordinates)
+function M:Layout()
+  local frame = WorldMapFrame
+  local map = Inkmap.zoom.scroll or WorldMapDetailFrame
+  map:ClearAllPoints()
+  map:SetPoint("TOPLEFT", frame, "TOPLEFT", PAD, -HEADER)
+
+  -- 1.12 anchors the map and its extras to this guide; keep the guide
+  -- where it was relative to the map (map top left = guide top - 502, -69)
+  WorldMapPositioningGuide:ClearAllPoints()
+  WorldMapPositioningGuide:SetPoint("TOP", map, "TOPLEFT", 502, 69)
+
+  self.mapLine:ClearAllPoints()
+  self.mapLine:SetPoint("TOPLEFT", map, "TOPLEFT", -1, 1)
+  self.mapLine:SetPoint("BOTTOMRIGHT", map, "BOTTOMRIGHT", 1, -1)
+
+  -- the zone dropdown and zoom out button are chained to this one
+  WorldMapContinentDropDown:ClearAllPoints()
+  WorldMapContinentDropDown:SetPoint("LEFT", frame, "TOPLEFT", 14, -HEADER / 2 - 2)
+  WorldMapFrameCloseButton:ClearAllPoints()
+  WorldMapFrameCloseButton:SetPoint("RIGHT", frame, "TOPRIGHT", -24, -HEADER / 2)
+
+  -- the zone name label lives inside the map button; keep it on top of the
+  -- map without zooming or scrolling along
+  local area = WorldMapFrameAreaFrame
+  if area then
+    area:SetParent(frame)
+    area:ClearAllPoints()
+    area:SetPoint("TOP", map, "TOP", 0, -10)
+    area:SetFrameLevel(map:GetFrameLevel() + 30)
+  end
 end
 
 function M:Reset()
@@ -174,19 +258,8 @@ function M:Init()
     if WorldMapFrame:IsShown() then WorldMapFrame:Hide() else WorldMapFrame:Show() end
   end
 
-  if BlackoutWorld then BlackoutWorld:Hide() end
-  StripTextures(frame)
-  frame:SetBackdrop({
-    bgFile = "Interface\\Tooltips\\UI-Tooltip-Background",
-    edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
-    tile = true, tileSize = 16, edgeSize = 16,
-    insets = { left = 4, right = 4, top = 4, bottom = 4 },
-  })
-  frame:SetBackdropColor(0, 0, 0, 0.85)
-  frame:SetBackdropBorderColor(0.6, 0.6, 0.6, 1)
-
-  WorldMapFrameCloseButton:ClearAllPoints()
-  WorldMapFrameCloseButton:SetPoint("TOPRIGHT", frame, "TOPRIGHT", 2, 2)
+  self:Style()
+  self:Layout()
 
   frame:SetMovable(true)
   frame:SetClampedToScreen(true)
@@ -240,6 +313,5 @@ function M:Init()
     end
   end)
 
-  self:CreateResizeGrip()
   self:Apply()
 end

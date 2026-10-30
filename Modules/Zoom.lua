@@ -155,31 +155,42 @@ function M:UpdatePlayerArrow()
   if ShowWorldMapArrowFrame then ShowWorldMapArrowFrame(inside and 1 or nil) end
 end
 
--- Party and raid icons are children of the map, so they would grow with
--- the zoom. Counter scale them to keep their size; that also shrinks
--- their anchor offsets, so place them again at their map position.
+-- Icons drawn on the map (group members, flags, corpse) are children of
+-- the zoomed map, so they would grow with it. Counter scale them to keep
+-- their size. Blizzard places them every frame with offsets in unzoomed
+-- map units, which the counter scale shrinks, so scale those up again.
+local function ZoomedIcons()
+  local names = { "WorldMapPlayer", "WorldMapCorpse", "WorldMapFlag1", "WorldMapFlag2" }
+  for i = 1, 4 do table.insert(names, "WorldMapParty" .. i) end
+  for i = 1, 40 do table.insert(names, "WorldMapRaid" .. i) end
+
+  local list = {}
+  for _, name in ipairs(names) do
+    local frame = getglobal(name)
+    if frame then table.insert(list, frame) end
+  end
+  return list
+end
+
+local function PlaceIcon(frame, zoom)
+  frame:SetScale(1 / zoom)
+  local point, rel, relPoint, x, y = frame:GetPoint()
+  if rel ~= WorldMapDetailFrame or not x then return end
+  -- offsets we set ourselves stand for the unzoomed ones Blizzard set
+  if x == frame.inkX and y == frame.inkY then x, y = frame.inkRawX, frame.inkRawY end
+  frame.inkRawX, frame.inkRawY = x, y
+  frame.inkX, frame.inkY = x * zoom, y * zoom
+  frame:SetPoint(point, rel, relPoint, frame.inkX, frame.inkY)
+end
+
 function M:UpdateUnitIcons()
   local zoom = self:GetZoom()
   if zoom == MIN_ZOOM and not self.iconsScaled then return end
   self.iconsScaled = zoom ~= MIN_ZOOM
 
-  local detail = WorldMapDetailFrame
-  local width, height = detail:GetWidth() * zoom, detail:GetHeight() * zoom
-  local kinds = { Party = 4, Raid = 40 }
-  for kind, count in pairs(kinds) do
-    for i = 1, count do
-      local frame = getglobal("WorldMap" .. kind .. i)
-      if frame then
-        frame:SetScale(1 / zoom)
-        if frame:IsShown() and zoom ~= MIN_ZOOM then
-          local x, y = GetPlayerMapPosition(frame.unit or (string.lower(kind) .. i))
-          if x ~= 0 or y ~= 0 then
-            frame:ClearAllPoints()
-            frame:SetPoint("CENTER", detail, "TOPLEFT", x * width, -y * height)
-          end
-        end
-      end
-    end
+  self.icons = self.icons or ZoomedIcons()
+  for _, frame in ipairs(self.icons) do
+    PlaceIcon(frame, zoom)
   end
 end
 
@@ -245,6 +256,7 @@ function M:Init()
   detail:ClearAllPoints()
   detail:SetPoint("TOPLEFT", scroll, "TOPLEFT", 0, 0)
   scroll:SetScrollChild(detail)
+  Inkmap.window:Layout()
 
   self:HookPanning()
   Inkmap:HookScript(WorldMapButton, "OnUpdate", function()

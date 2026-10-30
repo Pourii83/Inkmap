@@ -41,7 +41,9 @@ function M:UpdateMap(map)
     for i = 1, count do
       local frame = getglobal(map.prefix .. kind .. i)
       if frame and (frame:IsVisible() or not enabled) then
-        ColorIcon(frame, GetUnit(frame, kind, i), enabled, map.original[kind])
+        -- battleground team positions carry a name but a stale unit
+        local known = enabled and not frame.name
+        ColorIcon(frame, GetUnit(frame, kind, i), known, map.original[kind])
       end
     end
   end
